@@ -142,6 +142,12 @@ app.get('/prediction', async (req, res) => {
 
 });
 
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Servidor online en puerto ${PORT}`);
+});
+
 
 const PORT = process.env.PORT || 3000;
 
