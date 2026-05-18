@@ -58,7 +58,9 @@ app.get('/callback', async (req, res) => {
         );
 
         const accessToken = tokenResponse.data.access_token;
+        process.env.ACCESS_TOKEN = accessToken;
 
+        
         console.log('ACCESS TOKEN:', accessToken);
 
         res.send(`
@@ -77,6 +79,35 @@ app.get('/callback', async (req, res) => {
     }
 
 });
+
+app.get('/me', async (req, res) => {
+
+    try {
+
+        const token = process.env.ACCESS_TOKEN;
+
+        const response = await axios.get(
+            'https://api.twitch.tv/helix/users',
+            {
+                headers: {
+                    'Client-ID': process.env.CLIENT_ID,
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+
+        res.json(response.data);
+
+    } catch (error) {
+
+        console.error(error.response?.data || error.message);
+
+        res.json(error.response?.data || error.message);
+
+    }
+
+});
+
 
 const PORT = process.env.PORT || 3000;
 
