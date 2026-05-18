@@ -1,0 +1,148 @@
+body {
+
+    margin: 0;
+    padding: 0;
+
+    background: transparent;
+
+    overflow: hidden;
+
+    font-family: Arial, sans-serif;
+
+}
+
+#overlay {
+
+    width: 100vw;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+}
+
+#question {
+
+    color: white;
+
+    font-size: 42px;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    margin-bottom: 40px;
+
+    text-shadow:
+        0 0 10px cyan,
+        0 0 20px cyan;
+
+}
+
+.options {
+
+    display: flex;
+
+    gap: 30px;
+
+}
+
+.option {
+
+    flex: 1;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    backdrop-filter: blur(10px);
+
+    background:
+        rgba(0,0,0,0.4);
+
+    border: 2px solid white;
+
+}
+
+.cyan {
+
+    border-color: cyan;
+
+    box-shadow:
+        0 0 20px cyan;
+
+}
+
+.magenta {
+
+    border-color: magenta;
+
+    box-shadow:
+        0 0 20px magenta;
+
+}
+
+.title {
+
+    color: white;
+
+    font-size: 30px;
+
+    margin-bottom: 20px;
+
+}
+
+.bar-container {
+
+    width: 100%;
+
+    height: 40px;
+
+    background:
+        rgba(255,255,255,0.1);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+}
+
+.bar {
+
+    height: 100%;
+
+    width: 0%;
+
+    transition: 1s;
+
+}
+
+.cyan .bar {
+
+    background: cyan;
+
+    box-shadow:
+        0 0 20px cyan;
+
+}
+
+.magenta .bar {
+
+    background: magenta;
+
+    box-shadow:
+        0 0 20px magenta;
+
+}
+
+.points {
+
+    color: white;
+
+    font-size: 28px;
+
+    margin-top: 20px;
+
+    text-align: center;
+
+}

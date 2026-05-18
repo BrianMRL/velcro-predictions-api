@@ -83,6 +83,7 @@ async function getAccessToken() {
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
     res.send('Velcro Predictions API Online');
