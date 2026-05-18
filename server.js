@@ -3,8 +3,83 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const fs = require('fs-extra');
+
 
 const app = express();
+
+const TOKENS_FILE = './tokens.json';
+
+async function saveTokens(tokens) {
+
+    await fs.writeJson(TOKENS_FILE, tokens, {
+        spaces: 2
+    });
+
+}
+
+async function loadTokens() {
+
+    const exists = await fs.pathExists(TOKENS_FILE);
+
+    if (!exists) {
+        return null;
+    }
+
+    return await fs.readJson(TOKENS_FILE);
+
+}
+
+async function refreshAccessToken() {
+
+    const tokens = await loadTokens();
+
+    if (!tokens?.refresh_token) {
+        throw new Error('No refresh token');
+    }
+
+    const response = await axios.post(
+        'https://id.twitch.tv/oauth2/token',
+        null,
+        {
+            params: {
+                grant_type: 'refresh_token',
+                refresh_token: tokens.refresh_token,
+                client_id: process.env.CLIENT_ID,
+                client_secret: process.env.CLIENT_SECRET
+            }
+        }
+    );
+
+    const newTokens = {
+
+        access_token:
+            response.data.access_token,
+
+        refresh_token:
+            response.data.refresh_token
+
+    };
+
+    await saveTokens(newTokens);
+
+    console.log('TOKEN RENOVADO 🔥');
+
+    return newTokens.access_token;
+
+}
+
+async function getAccessToken() {
+
+    const tokens = await loadTokens();
+
+    if (!tokens?.access_token) {
+        throw new Error('No access token');
+    }
+
+    return tokens.access_token;
+
+}
 
 app.use(cors());
 app.use(express.json());
@@ -57,9 +132,16 @@ app.get('/callback', async (req, res) => {
             }
         );
 
-        const accessToken = tokenResponse.data.access_token;
-        process.env.ACCESS_TOKEN = accessToken;
+const accessToken =
+    tokenResponse.data.access_token;
 
+const refreshToken =
+    tokenResponse.data.refresh_token;
+
+await saveTokens({
+    access_token: accessToken,
+    refresh_token: refreshToken
+});
 
         console.log('ACCESS TOKEN:', accessToken);
 
@@ -87,7 +169,7 @@ app.get('/me', async (req, res) => {
     
     try {
 
-        const token = process.env.ACCESS_TOKEN;
+        const token = await getAccessToken();
 
         const response = await axios.get(
             'https://api.twitch.tv/helix/users',
@@ -115,7 +197,7 @@ app.get('/prediction', async (req, res) => {
 
     try {
 
-        const token = process.env.ACCESS_TOKEN;
+        const token = await getAccessToken();
 
         const response = await axios.get(
             'https://api.twitch.tv/helix/predictions',
@@ -146,7 +228,7 @@ app.get('/prediction/live', async (req, res) => {
 
     try {
 
-        const token = process.env.ACCESS_TOKEN;
+        const token = await getAccessToken();
 
         const response = await axios.get(
             'https://api.twitch.tv/helix/predictions',
@@ -205,12 +287,34 @@ app.get('/prediction/live', async (req, res) => {
 
     } catch (error) {
 
-        console.error(error.response?.data || error.message);
+    const status =
+        error.response?.status;
 
-        res.json(error.response?.data || error.message);
+    if (status === 401) {
+
+        console.log(
+            'TOKEN EXPIRADO. RENOVANDO...'
+        );
+
+        await refreshAccessToken();
+
+        return res.json({
+            retry: true
+        });
 
     }
 
+    console.error(
+        error.response?.data ||
+        error.message
+    );
+
+    res.json(
+        error.response?.data ||
+        error.message
+    );
+
+}
 });
 
 
