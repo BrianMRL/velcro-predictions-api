@@ -82,21 +82,19 @@ app.get('/callback', async (req, res) => {
 
 app.get('/me', async (req, res) => {
 
-app.get('/prediction', async (req, res) => {
 
+
+    
     try {
 
         const token = process.env.ACCESS_TOKEN;
 
         const response = await axios.get(
-            'https://api.twitch.tv/helix/predictions',
+            'https://api.twitch.tv/helix/users',
             {
                 headers: {
                     'Client-ID': process.env.CLIENT_ID,
                     'Authorization': `Bearer ${token}`
-                },
-                params: {
-                    broadcaster_id: '152904113'
                 }
             }
         );
@@ -113,17 +111,21 @@ app.get('/prediction', async (req, res) => {
 
 });
 
+app.get('/prediction', async (req, res) => {
 
     try {
 
         const token = process.env.ACCESS_TOKEN;
 
         const response = await axios.get(
-            'https://api.twitch.tv/helix/users',
+            'https://api.twitch.tv/helix/predictions',
             {
                 headers: {
                     'Client-ID': process.env.CLIENT_ID,
                     'Authorization': `Bearer ${token}`
+                },
+                params: {
+                    broadcaster_id: '152904113'
                 }
             }
         );
