@@ -106,8 +106,8 @@ function renderUsers(id, users) {
         document.getElementById(id);
 
     container.innerHTML = '';
-
-    users.forEach(user => {
+    
+(users || []).forEach(user => {
 
         const div =
             document.createElement('div');
@@ -129,7 +129,9 @@ function renderUsers(id, users) {
 
 function updateTimer(data) {
 
-    const totalTime = 120;
+    const totalTime =
+    data.prediction_window || 120;
+
 
     const now =
         new Date().getTime();

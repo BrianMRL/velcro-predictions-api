@@ -267,7 +267,9 @@ app.get('/prediction/live', async (req, res) => {
 
             status: prediction.status,
             created_at: prediction.created_at,
-            
+                prediction_window:
+                prediction.prediction_window,
+                
             totalPoints:
                 outcome1.channel_points +
                 outcome2.channel_points,
