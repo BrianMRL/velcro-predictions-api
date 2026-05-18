@@ -1,22 +1,43 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <title>Velcro Predictions</title>
-
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
 <body>
 
     <div id="overlay">
 
-        <div id="question">
-            Cargando predicción...
+        <div id="top-section">
+
+            <div id="question">
+                Cargando...
+            </div>
+
+            <div id="timer-wrapper">
+
+                <svg id="timer-svg">
+
+                    <circle
+                        cx="70"
+                        cy="70"
+                        r="60"
+                        id="timer-bg"
+                    />
+
+                    <circle
+                        cx="70"
+                        cy="70"
+                        r="60"
+                        id="timer-progress"
+                    />
+
+                </svg>
+
+                <div id="timer-text">
+                    120
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="status">
+            ACTIVE
         </div>
 
         <div class="options">
@@ -28,15 +49,15 @@
                 </div>
 
                 <div class="bar-container">
-
-                    <div class="bar" id="option1-bar">
-
-                    </div>
-
+                    <div class="bar" id="option1-bar"></div>
                 </div>
 
                 <div class="points" id="option1-points">
                     0
+                </div>
+
+                <div class="predictors" id="option1-users">
+
                 </div>
 
             </div>
@@ -48,15 +69,15 @@
                 </div>
 
                 <div class="bar-container">
-
-                    <div class="bar" id="option2-bar">
-
-                    </div>
-
+                    <div class="bar" id="option2-bar"></div>
                 </div>
 
                 <div class="points" id="option2-points">
                     0
+                </div>
+
+                <div class="predictors" id="option2-users">
+
                 </div>
 
             </div>
@@ -68,5 +89,3 @@
     <script src="app.js"></script>
 
 </body>
-
-</html>

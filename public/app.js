@@ -1,3 +1,5 @@
+const FULL_DASH = 377;
+
 async function loadPrediction() {
 
     try {
@@ -44,6 +46,11 @@ async function loadPrediction() {
             data.title;
 
         document
+            .getElementById('status')
+            .innerText =
+            data.status;
+
+        document
             .getElementById('option1-title')
             .innerText =
             option1.title;
@@ -73,11 +80,88 @@ async function loadPrediction() {
             .style.width =
             `${percent2}%`;
 
+        renderUsers(
+            'option1-users',
+            option1.predictors
+        );
+
+        renderUsers(
+            'option2-users',
+            option2.predictors
+        );
+
+        updateTimer(data);
+
     } catch (error) {
 
         console.error(error);
 
     }
+
+}
+
+function renderUsers(id, users) {
+
+    const container =
+        document.getElementById(id);
+
+    container.innerHTML = '';
+
+    users.forEach(user => {
+
+        const div =
+            document.createElement('div');
+
+        div.className =
+            'predictor';
+
+        div.innerHTML = `
+            <strong>${user.user_name}</strong>
+            <br>
+            ${user.channel_points_used.toLocaleString()} pts
+        `;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+function updateTimer(data) {
+
+    const totalTime = 120;
+
+    const now =
+        new Date().getTime();
+
+    const created =
+        new Date(data.created_at)
+        .getTime();
+
+    const elapsed =
+        (now - created) / 1000;
+
+    const remaining =
+        Math.max(
+            0,
+            totalTime - elapsed
+        );
+
+    document
+        .getElementById('timer-text')
+        .innerText =
+        Math.ceil(remaining);
+
+    const progress =
+        remaining / totalTime;
+
+    const offset =
+        FULL_DASH * (1 - progress);
+
+    document
+        .getElementById('timer-progress')
+        .style.strokeDashoffset =
+        offset;
 
 }
 
