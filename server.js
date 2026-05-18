@@ -60,7 +60,7 @@ app.get('/callback', async (req, res) => {
         const accessToken = tokenResponse.data.access_token;
         process.env.ACCESS_TOKEN = accessToken;
 
-        
+
         console.log('ACCESS TOKEN:', accessToken);
 
         res.send(`
@@ -81,6 +81,38 @@ app.get('/callback', async (req, res) => {
 });
 
 app.get('/me', async (req, res) => {
+
+app.get('/prediction', async (req, res) => {
+
+    try {
+
+        const token = process.env.ACCESS_TOKEN;
+
+        const response = await axios.get(
+            'https://api.twitch.tv/helix/predictions',
+            {
+                headers: {
+                    'Client-ID': process.env.CLIENT_ID,
+                    'Authorization': `Bearer ${token}`
+                },
+                params: {
+                    broadcaster_id: '152904113'
+                }
+            }
+        );
+
+        res.json(response.data);
+
+    } catch (error) {
+
+        console.error(error.response?.data || error.message);
+
+        res.json(error.response?.data || error.message);
+
+    }
+
+});
+
 
     try {
 
