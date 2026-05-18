@@ -142,6 +142,77 @@ app.get('/prediction', async (req, res) => {
 
 });
 
+app.get('/prediction/live', async (req, res) => {
+
+    try {
+
+        const token = process.env.ACCESS_TOKEN;
+
+        const response = await axios.get(
+            'https://api.twitch.tv/helix/predictions',
+            {
+                headers: {
+                    'Client-ID': process.env.CLIENT_ID,
+                    'Authorization': `Bearer ${token}`
+                },
+                params: {
+                    broadcaster_id: '152904113'
+                }
+            }
+        );
+
+        const prediction = response.data.data[0];
+
+        if (!prediction) {
+            return res.json({
+                active: false
+            });
+        }
+
+        const outcome1 = prediction.outcomes[0];
+        const outcome2 = prediction.outcomes[1];
+
+        res.json({
+
+            active: true,
+
+            title: prediction.title,
+
+            status: prediction.status,
+
+            totalPoints:
+                outcome1.channel_points +
+                outcome2.channel_points,
+
+            options: [
+                {
+                    title: outcome1.title,
+                    color: outcome1.color,
+                    users: outcome1.users,
+                    points: outcome1.channel_points,
+                    predictors: outcome1.top_predictors || []
+                },
+                {
+                    title: outcome2.title,
+                    color: outcome2.color,
+                    users: outcome2.users,
+                    points: outcome2.channel_points,
+                    predictors: outcome2.top_predictors || []
+                }
+            ]
+
+        });
+
+    } catch (error) {
+
+        console.error(error.response?.data || error.message);
+
+        res.json(error.response?.data || error.message);
+
+    }
+
+});
+
 
 const PORT = process.env.PORT || 3000;
 
