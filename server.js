@@ -244,7 +244,11 @@ app.get('/prediction/live', async (req, res) => {
             }
         );
 
-        const prediction = response.data.data[0];
+        const prediction = response.data.data.find(
+    p =>
+        p.status === 'ACTIVE' ||
+        p.status === 'LOCKED'
+);
 
         if (!prediction) {
             return res.json({
